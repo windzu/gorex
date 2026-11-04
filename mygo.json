@@ -1,6 +1,7 @@
 {
-  "name": "GoRex",
-  "identifier": "dev.gorex.app",
+  "name": "GoRex Tailscale Pilot",
+  "slug": "gorex",
+  "identifier": "dev.gorex.app.tailnetpilot",
   "version": "0.12.1",
   "copyright": "A replica of Superlogical's Rex, built with MyGo",
   "out": "build",
