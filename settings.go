@@ -174,7 +174,7 @@ func (a *App) applyPrefs() {
 			p.term.SetFont(termFont)
 			p.term.SetTheme(termLight, termDark)
 			p.term.SetCopyOnSelect(ghostty.CopyOnSelect)
-			p.term.SetMinimumContrast(ghostty.MinimumContrast)
+			p.term.SetMinimumContrast(ghostty.minimumContrast())
 		}
 	}
 }

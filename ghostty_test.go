@@ -283,10 +283,15 @@ func TestGhosttyTermOptions(t *testing.T) {
 	// A reload starts from a fresh configuration: nothing is kept.
 	ghostty = *parseGhostty(writeConf(t, t.TempDir(), "c2", "font-size = 12\n"))
 	o = termOptions()
-	if o.CopyOnSelect != 0 || o.RightClick != 0 || o.MinimumContrast != 0 || o.NoDefaultKeybinds || o.Keybinds != nil ||
+	if o.CopyOnSelect != 0 || o.RightClick != 0 || o.MinimumContrast != 3 || o.NoDefaultKeybinds || o.Keybinds != nil ||
 		o.NoClipboardWrite || o.ClipboardRead != terminal.ClipboardAsk || o.Padding != (terminal.Padding{}) ||
 		o.PaddingColor != terminal.PaddingBackground || o.ImageLimit != 0 {
 		t.Errorf("options leaked: %+v", o)
+	}
+	// An explicit 1 keeps the program's colors, even when they have low contrast.
+	ghostty = *parseGhostty(writeConf(t, t.TempDir(), "contrast", "minimum-contrast = 1\n"))
+	if o = termOptions(); o.MinimumContrast != 1 {
+		t.Errorf("explicit minimum contrast was replaced: %v", o.MinimumContrast)
 	}
 	// An explicit zero disables images; Ghostty's default asks for reads.
 	ghostty = *parseGhostty(writeConf(t, t.TempDir(), "c3", "image-storage-limit = 0\n"))

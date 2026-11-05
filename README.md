@@ -219,6 +219,11 @@ dark or light by it, as Ghostty's `window-theme = auto` does (not with
 and `minimum-contrast` to open panes; the other options apply to new
 panes.
 
+When `minimum-contrast` is unset, GoRex uses a ratio of 3 so that
+application colors stay readable on light and dark terminal backgrounds,
+including remote panes. A configured value takes precedence. Use
+`minimum-contrast = 1` to keep the application's colors unchanged.
+
 Options GoRex maps fully: the colors and fonts above, `cursor-style`,
 `cursor-style-blink`, `scrollback-limit`, `macos-option-as-alt`,
 `copy-on-select`, `right-click-action`, `minimum-contrast`,

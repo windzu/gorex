@@ -54,6 +54,15 @@ type ghosttyConfig struct {
 // uses: the user's choices from settings.json over it (see withPrefs).
 var ghosttyRaw, ghostty ghosttyConfig
 
+// minimumContrast keeps TUI colors readable across light and dark panes.
+// A configured value, including 1 to keep colors unchanged, takes precedence.
+func (c ghosttyConfig) minimumContrast() float32 {
+	if c.MinimumContrast != 0 {
+		return c.MinimumContrast
+	}
+	return 3
+}
+
 // ghosttyConfigPaths returns the files Ghostty reads, as it finds them, the
 // later over the earlier. GOREX_GHOSTTY_CONFIG names the only one when set.
 func ghosttyConfigPaths() []string {
@@ -600,7 +609,7 @@ func termOptions() terminal.Options {
 		Padding:           paddingOrZero(ghostty.Padding),
 		PaddingColor:      paddingColorOrZero(ghostty.PaddingColor),
 		ImageLimit:        imageLimitOrZero(ghostty.ImageLimit),
-		MinimumContrast:   ghostty.MinimumContrast,
+		MinimumContrast:   ghostty.minimumContrast(),
 		Keybinds:          ghostty.Keybinds,
 		NoDefaultKeybinds: ghostty.NoDefaultKeybinds,
 	}
