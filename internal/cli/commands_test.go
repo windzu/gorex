@@ -54,6 +54,24 @@ func TestVersion(t *testing.T) {
 	}
 }
 
+func TestUpgradeIfRunning(t *testing.T) {
+	t.Setenv("GOREX_DIR", t.TempDir())
+	if code, _, _, errOut := runMain(t, "server", "upgrade"); code != ExitServer {
+		t.Fatalf("upgrade without a server: %d %s", code, errOut)
+	}
+	if code, _, _, errOut := runMain(t, "server", "upgrade", "--if-running"); code != ExitOK {
+		t.Fatalf("upgrade if running without a server: %d %s", code, errOut)
+	}
+	path := rex.SocketPath()
+	t.Cleanup(func() { os.Remove(path) })
+	if err := os.WriteFile(path, nil, 0600); err != nil {
+		t.Fatal(err)
+	}
+	if code, _, _, errOut := runMain(t, "server", "upgrade", "--if-running"); code != ExitServer {
+		t.Fatalf("upgrade with an unreachable socket: %d %s", code, errOut)
+	}
+}
+
 func TestCLI(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("uses sh")

@@ -4,6 +4,7 @@ umask 077
 
 release_url=https://github.com/windzu/gorex/releases
 version=
+update_from=
 
 fail() {
     printf 'gorex install: %s\n' "$*" >&2
@@ -15,6 +16,11 @@ while [ "$#" -gt 0 ]; do
         --version)
             [ "$#" -ge 2 ] || fail '--version requires a release tag'
             version=$2
+            shift 2
+            ;;
+        --update-from)
+            [ "$#" -ge 2 ] || fail 'missing executable path'
+            update_from=$2
             shift 2
             ;;
         -h|--help)
@@ -84,6 +90,11 @@ if [ -e "$current" ] || [ -L "$current" ]; then
         *) fail "refusing to overwrite $current" ;;
     esac
 fi
+if [ -n "$update_from" ]; then
+    [ -L "$current" ] && [ -L "$command_link" ] &&
+        [ "$update_from" = "$root/$(readlink "$current")/$executable" ] ||
+        fail 'gorex update requires the current CLI-managed installation. Install with install.sh first.'
+fi
 
 download() {
     curl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \
@@ -103,8 +114,14 @@ case $version in
 esac
 printf '%s\n' "$version" | LC_ALL=C grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+([.-][a-zA-Z0-9]+)*)?$' ||
     fail "invalid release tag: $version"
-if [ -L "$current" ] && [ "$(readlink "$current")" != "versions/$version" ]; then
-    fail 'GoRex is already installed. Use gorex update to change versions.'
+if [ -L "$current" ]; then
+    installed=$(readlink "$current")
+    if [ -n "$update_from" ] && [ "$installed" = "versions/$version" ]; then
+        printf 'GoRex %s is already installed.\n' "$version"
+        exit 0
+    fi
+    [ -n "$update_from" ] || [ "$installed" = "versions/$version" ] ||
+        fail 'GoRex is already installed. Use gorex update to change versions.'
 fi
 number=${version#v}
 asset="gorex-${number%%-*}-$asset_suffix"
@@ -153,6 +170,10 @@ fi
 
 if [ -z "$work" ]; then work=$(mktemp -d "$root/.install.XXXXXX"); fi
 ln -s "versions/$version" "$work/current"
+if [ -n "$update_from" ]; then
+    "$destination/$executable" server upgrade --if-running ||
+        fail 'the current installation is still selected. Resolve the server error and retry.'
+fi
 # Replace the pointer itself, even when it points to a directory.
 if [ "$os" = Darwin ]; then
     mv -fh "$work/current" "$current"

@@ -25,6 +25,16 @@ Linux, run `gorex` to open the desktop app or `gorex -server` for a
 headless session server. Existing session state stays in its normal
 location.
 
+Run `gorex update` to update a CLI-managed install to the latest stable
+release, or use `gorex update --version TAG` for a specific release that
+supports the updater. When the local session server is running, the
+updater hands it over to the new binary before switching the install.
+Terminal processes keep running. Clients can briefly reconnect and the
+desktop UI uses the new version the next time you open the app. If the
+server cannot upgrade in place, the update reports an error and leaves
+the current version selected. Set `GOREX_DIR` when updating a server that
+uses a custom session state directory.
+
 ## What it does
 
 - **Tabs and split panes.** Every pane is a card over the window's gradient,
@@ -477,7 +487,15 @@ CLI together.
 
 ### Release
 
-Releases update installed apps, signed with a key that only the
+For the `windzu/gorex` CLI channel, build the Apple Silicon disk image
+and Linux x86-64 archive with
+`go tool mygo build -platform darwin/arm64,linux/amd64`. Upload both and a
+`SHA256SUMS` file containing their basenames and checksums to a GitHub
+Release tagged `v<version>` on this fork. Only stable releases are selected
+automatically. CLI-managed builds use the fork release rather than a
+native updater feed.
+
+Upstream's native updater uses releases signed with a key that only the
 maintainer holds. Once, run `go tool mygo keygen` and put the contents of
 `mygo-update.pub` in `updates.publicKey` of `mygo.json`; keep
 `mygo-update.key` out of the repository. For each release, add a
