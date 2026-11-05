@@ -18,8 +18,9 @@ import (
 // The settings window: a sidebar of sections and the one chosen beside it,
 // as Rex's.
 var settingsUI struct {
-	win     *mygo.Window
-	section string
+	win      *mygo.Window
+	section  string
+	hostEdit *hostEditor
 	// themeQuery narrows the list of themes; fonts are the monospaced
 	// families of the font picker, listed once, and themes the themes read
 	// so far.
@@ -85,6 +86,7 @@ func (a *App) openSettings() {
 			rebuildMenu(a.st)
 		}
 		settingsUI.win = nil
+		settingsUI.hostEdit = nil
 	})
 }
 
@@ -171,12 +173,18 @@ func (a *App) settingsView(c *ui.Context) {
 		})
 	})
 	if page := hostsPairQR; page != nil {
+		if page.local {
+			page.host, _, _ = a.hostIdentity()
+		} else if h := a.hostByID(page.hostID); h != nil {
+			page.host = a.hostName(h)
+		}
 		if page.local && page.address != a.localRexPairURL() {
 			hostsPairQR = nil
 		} else {
 			hostPairQRSheet(c, k, page)
 		}
 	}
+	a.hostEditorSheet(c, k, &settingsUI.hostEdit)
 }
 
 // sectionTitle is the title of a settings section, as the page's header
@@ -322,6 +330,7 @@ func (a *App) serverGroup(c *ui.Context, k *colors, name, glyph, sub, label stri
 					ui.Box(c).Size(7, 7).Radius(4).Background(dot)
 					ui.Text(c, label).FontSize(12).FontWeight(600).TextColor(k.text).SingleLine()
 				})
+				a.hostActionsButton(c, k, nil, true, 26)
 			})
 		})
 		row := func(label, value string) {
@@ -341,6 +350,7 @@ func (a *App) serverGroup(c *ui.Context, k *colors, name, glyph, sub, label stri
 		sessions, running := a.sessionCounts()
 		row(locales.HostSessions(), locales.HostSessionCount(sessions, running))
 		hostFacts(h, row)
+		row(locales.HostEditNote(), prefs.HostProfiles["local"].Note)
 	})
 }
 

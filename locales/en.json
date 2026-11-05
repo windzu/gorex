@@ -1908,5 +1908,87 @@
   "remoteLanListenOn": "Listen on",
   "@remoteLanListenOn": {
     "description": "Remote page row: the address on the local network that Rex's apps connect to."
+  },
+  "hostActions": "Actions for {name}",
+  "@hostActions": {
+    "description": "Local host information editor and actions.",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "example": "studio"
+      }
+    }
+  },
+  "hostEdit": "Edit Information…",
+  "@hostEdit": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditTitle": "Edit Host Information",
+  "@hostEditTitle": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditAlias": "Alias",
+  "@hostEditAlias": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditNote": "Note",
+  "@hostEditNote": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditClearAlias": "Clear Alias",
+  "@hostEditClearAlias": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditHint": "Only shown in GoRex on this device. Leave the alias empty to use the default name.",
+  "@hostEditHint": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditDeviceName": "Device name",
+  "@hostEditDeviceName": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditSourceName": "Source name",
+  "@hostEditSourceName": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditUnknown": "Not available yet",
+  "@hostEditUnknown": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditSave": "Save",
+  "@hostEditSave": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditAliasLong": "Use at most 64 characters for the alias.",
+  "@hostEditAliasLong": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditAliasInvalid": "The alias cannot contain line breaks or control characters.",
+  "@hostEditAliasInvalid": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditNoteLong": "Use at most 500 characters for the note.",
+  "@hostEditNoteLong": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditGone": "This host has been removed. Your draft is still here.",
+  "@hostEditGone": {
+    "description": "Local host information editor and actions."
+  },
+  "hostEditSaveFailed": "Could not save the information. Please try again.",
+  "@hostEditSaveFailed": {
+    "description": "Local host information editor and actions."
+  },
+  "hostSourceManual": "Added manually",
+  "@hostSourceManual": {
+    "description": "Local host information editor and actions."
+  },
+  "hostSourceNetwork": "Coordinator network",
+  "@hostSourceNetwork": {
+    "description": "Local host information editor and actions."
+  },
+  "hostSourceTailnet": "System Tailscale",
+  "@hostSourceTailnet": {
+    "description": "Local host information editor and actions."
   }
 }

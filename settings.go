@@ -52,6 +52,8 @@ type settings struct {
 	Cursor       string `json:"cursor,omitempty"` // "block", "bar" or "underline"
 	CursorBlink  *bool  `json:"cursorBlink,omitempty"`
 	CopyOnSelect *bool  `json:"copyOnSelect,omitempty"`
+	// HostProfiles belong to this client, independently of discovery.
+	HostProfiles map[string]hostProfile `json:"hostProfiles,omitempty"`
 }
 
 const defaultFontSize = 11.6
@@ -100,9 +102,40 @@ func loadSettings() {
 }
 
 func saveSettings() {
-	b, _ := json.MarshalIndent(prefs, "", "  ")
-	os.MkdirAll(rex.Dir(), 0o700)
-	os.WriteFile(settingsPath(), b, 0o600)
+	_ = writeSettings(prefs)
+}
+
+// writeSettings publishes a complete file atomically. Callers that report
+// success to the user must check the error before changing prefs.
+func writeSettings(next settings) error {
+	if old, err := os.ReadFile(settingsPath()); err == nil {
+		var existing map[string]json.RawMessage
+		if err := json.Unmarshal(old, &existing); err != nil {
+			return err
+		}
+	} else if !os.IsNotExist(err) {
+		return err
+	}
+	b, err := json.MarshalIndent(next, "", "  ")
+	if err != nil {
+		return err
+	}
+	if err = os.MkdirAll(rex.Dir(), 0o700); err != nil {
+		return err
+	}
+	f, err := os.CreateTemp(rex.Dir(), ".settings-*")
+	if err != nil {
+		return err
+	}
+	defer os.Remove(f.Name())
+	if _, err = f.Write(b); err != nil {
+		f.Close()
+		return err
+	}
+	if err = f.Close(); err != nil {
+		return err
+	}
+	return os.Rename(f.Name(), settingsPath())
 }
 
 // setThemeSource sets the windows' theme; tests, which run no windows, take

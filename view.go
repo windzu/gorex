@@ -69,6 +69,7 @@ func (a *App) view(c *ui.Context) {
 	a.shortcuts(c)
 	a.palette(c, k)
 	a.workspaceConfirm(c, k)
+	a.hostEditorSheet(c, k, &a.hostEdit)
 	// mygo paints a text input's caret in the theme of the frame as it
 	// paints, and a field cannot give it one of its own: the widgets above
 	// have taken their colors already, so the theme changes now, after
@@ -1277,7 +1278,7 @@ func (a *App) reconnecting(c *ui.Context, k *colors, p *Pane) {
 	var title, detail string
 	switch {
 	case h.state != hostConnected:
-		title, detail = locales.PaneReconnecting(h.Name), locales.PaneConnectionDropped()
+		title, detail = locales.PaneReconnecting(a.hostName(h)), locales.PaneConnectionDropped()
 	case p.remote != nil && p.remote.Detached():
 		title = locales.PaneStreamInterrupted()
 	default:
