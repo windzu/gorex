@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.3
+
+* Discover same-account desktop hosts through system Tailscale.
+* Display Rex pairing QR codes for eligible hosts and opt in to sharing live desktop sessions with paired Rex clients.
+* Install from a shell on Apple Silicon macOS and x86-64 Linux. Update a CLI-managed install in place while keeping terminal processes alive.
+
 ## 0.12.0
 
 ### Features

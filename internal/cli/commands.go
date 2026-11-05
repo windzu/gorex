@@ -57,6 +57,8 @@ func Main(args []string, out, errOut io.Writer, version string) (code int, handl
 		return ExitOK, true
 	case "version":
 		return versionCmd(args, out, errOut, version)
+	case "update":
+		return updateCmd(args, out, errOut)
 	case "ls", "list":
 		return listCmd(args, out, errOut)
 	case "clients":
@@ -126,7 +128,7 @@ Usage:
   gorex events
   gorex hosts [ls] [--json]
   gorex remote status [--json] | tailscale on|off | address | enable | disable | control on|off | share on|off | layout on|off | pair start|stop | pending | approve KEY | reject KEY | allow NAME KEY | revoke KEY
-  gorex server restart | upgrade
+  gorex server restart | upgrade [--if-running]
   gorex config path | config check [FILE] | config reload
   gorex wait [-s SESSION] [--json] (--exit | --idle | --status STATE | --contains TEXT) [--timeout D]
   gorex run [--json] [--dir DIR] -- COMMAND...
@@ -135,6 +137,7 @@ Usage:
   gorex rex-import [--rex SOCKET] [--session LABEL|ID] [--shell] [--json]
   gorex rex-mirror --session ID --block ID [--label LABEL] [--socket PATH]
   gorex version [--json]
+  gorex update [--version TAG]
 
 Targets: -s SESSION, -w TAB or -b PANE; -b wins, then -w, then -s.
 The session defaults to GOREX_SESSION, set in every terminal GoRex opens.
@@ -859,14 +862,24 @@ func serverCmd(args []string, out, errOut io.Writer) (int, bool) {
 		return ExitUsage, true
 	}
 	usage := func() (int, bool) {
-		fmt.Fprintln(errOut, "gorex server: restart | upgrade")
+		fmt.Fprintln(errOut, "gorex server: restart | upgrade [--if-running]")
 		return ExitUsage, true
 	}
-	if len(args) != 1 || (args[0] != "restart" && args[0] != "upgrade") {
+	ifRunning := len(args) == 2 && args[0] == "upgrade" && args[1] == "--if-running"
+	if !ifRunning && (len(args) != 1 || (args[0] != "restart" && args[0] != "upgrade")) {
 		return usage()
 	}
 	c, err := rex.ConnectExisting()
 	if err != nil {
+		if ifRunning {
+			// An unreachable socket could belong to a live server. Only a
+			// missing socket lets the installer proceed without a handoff.
+			if _, statErr := os.Lstat(rex.SocketPath()); errors.Is(statErr, os.ErrNotExist) {
+				return ExitOK, true
+			}
+			fmt.Fprintln(errOut, "gorex server: cannot verify the local server is stopped")
+			return ExitServer, true
+		}
 		fmt.Fprintln(errOut, "gorex server: no server runs")
 		return ExitServer, true
 	}

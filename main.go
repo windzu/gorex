@@ -9,6 +9,7 @@
 package main
 
 import (
+	_ "embed"
 	"log"
 	"os"
 	"path/filepath"
@@ -24,6 +25,9 @@ import (
 	"gorex/internal/rexapi"
 	"gorex/locales"
 )
+
+//go:embed install.sh
+var installerScript string
 
 func main() {
 	// -server runs the session server (rex.ServerMain); other arguments
@@ -68,6 +72,7 @@ func main() {
 	// The command line shares the binary: it runs before the app, and
 	// leaves the app's own arguments, as AppKit's, alone.
 	cli.GhosttyWarnings = ghosttyWarnings
+	cli.InstallerScript = installerScript
 	if code, handled := cli.Main(os.Args[1:], os.Stdout, os.Stderr, mygo.App.Version()); handled {
 		os.Exit(code)
 	}
