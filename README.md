@@ -7,6 +7,24 @@ browser panes use the system's web view.
 
 ![GoRex](docs/screenshot.png)
 
+## Install from the command line
+
+The `windzu/gorex` fork provides a per-user installer for Apple Silicon
+Macs and x86-64 Linux. It verifies the GitHub Release's SHA256 before
+installing the native app and CLI. It does not need Go, Node.js or sudo.
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/windzu/gorex/main/install.sh | sh
+```
+
+The installer uses the latest stable release by default. To install a
+specific tag, including a prerelease, append `-s -- --version TAG` after
+`sh`. Add `$HOME/.local/bin` to your shell's `PATH` if it is not already
+there. On macOS the app is available at `~/Applications/GoRex.app`. On
+Linux, run `gorex` to open the desktop app or `gorex -server` for a
+headless session server. Existing session state stays in its normal
+location.
+
 ## What it does
 
 - **Tabs and split panes.** Every pane is a card over the window's gradient,
