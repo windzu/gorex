@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.4
+
+* Show this device's Rex pairing QR code in Settings, both above the remote hosts list and in the local Rex listener card. Both entries open the same QR and Copy Link dialog. ([#10](https://github.com/windzu/gorex/pull/10))
+
 ## 0.12.3
 
 * Discover same-account desktop hosts through system Tailscale.
