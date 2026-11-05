@@ -1195,9 +1195,9 @@ func (a *App) groupTabs() {
 // hostName names a host, this machine for nil.
 func (a *App) hostName(h *hostConn) string {
 	if h == nil {
-		return thisMachine()
+		return hostDisplayName(nil, thisMachine())
 	}
-	return h.Name
+	return hostDisplayName(h, h.Name)
 }
 
 // hostStatus says what a host's connection is doing: a label, a detail,

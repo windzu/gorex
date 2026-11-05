@@ -1223,7 +1223,7 @@ func (a *App) newTabOnItems(match func(string) bool) []paletteItem {
 	}
 	var items []paletteItem
 	for _, h := range a.allHosts() {
-		name := a.hostName(h)
+		name := a.hostChoiceName(h)
 		title := locales.CmdNewTabOn(name)
 		if !match(title) && !match(locales.In("en").CmdNewTabOn(name)) {
 			continue

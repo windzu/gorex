@@ -78,6 +78,7 @@ func (a *App) hostIdentity() (name, model, glyph string) {
 		name, _ = os.Hostname()
 		name = strings.TrimSuffix(name, ".local")
 	}
+	name = hostDisplayName(nil, name)
 	glyph = "mac-studio"
 	switch {
 	case strings.Contains(model, "MacBook"), h.Portable:
@@ -136,6 +137,7 @@ func (a *App) hostPanel(c *ui.Context, k *colors, name, glyph string) {
 		})
 	}
 	ui.Column(c).Gap(7).Children(func() { hostFacts(h, row) })
+	row(locales.HostEditNote(), prefs.HostProfiles["local"].Note)
 	ui.Divider(c)
 	sessions, running := a.sessionCounts()
 	ui.Column(c).Gap(7).Children(func() {
@@ -209,12 +211,16 @@ func (a *App) hostsInPanel(c *ui.Context, k *colors) {
 					ui.Column(c).Grow(1).MinWidth(0).Children(func() {
 						ui.Text(c, name).FontSize(12.5).FontWeight(600).TextColor(k.text).SingleLine().Ellipsis("…")
 						ui.Text(c, label+" · "+locales.HostsSessions(sessions)).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…")
+						if note := prefs.HostProfiles[hostProfileID(h)].Note; note != "" {
+							ui.Text(c, note).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…").Tooltip(note)
+						}
 					})
 					newTab := locales.CmdNewTabOn(name)
 					if iconButton(c, k, "plus", newTab, 26, 15).Tooltip(newTab).Clicked() {
 						a.hostOpen = false
 						a.newTabOn(h, a.dirOn(h))
 					}
+					a.hostActionsButton(c, k, h, false, 26)
 				})
 			}
 		})

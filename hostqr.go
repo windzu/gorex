@@ -17,6 +17,7 @@ import (
 // The settings window owns this dialog and its asynchronous endpoint lookup.
 type hostPairQR struct {
 	host, address                     string
+	hostID                            string
 	image                             ui.ImageSource
 	open, loading, copied, copyFailed bool
 	local                             bool
@@ -50,7 +51,7 @@ func openHostPairQR(h *hostConn) {
 	if win == nil {
 		return
 	}
-	page := &hostPairQR{host: h.Name, open: true, loading: true}
+	page := &hostPairQR{host: hostDisplayName(h, h.Name), hostID: h.ID, open: true, loading: true}
 	hostsPairQR = page
 	target := h.Address
 	go func() {

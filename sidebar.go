@@ -366,18 +366,25 @@ func (a *App) hostSection(c *ui.Context, k *colors, h *hostConn) {
 	if anim := motion(c); anim != nil {
 		row.Transition(ui.ElementTransition{Animation: anim, Position: true})
 	}
-	hovered := row.Hovered()
+	row.ContextMenu(func(m *ui.Menu) { a.hostActions(m, h, false) })
+	visible := row.Hovered() || row.FocusWithin()
 	row.Children(func() {
 		if h != nil {
 			label, _, _ := hostStatus(h)
 			ui.Box(c).Size(6, 6).Radius(3).Background(hostDot(k, h)).Shrink(0).Tooltip(label)
 		}
 		ui.Text(c, name).FontSize(11.5).FontWeight(600).TextColor(k.textFaint).SingleLine().Ellipsis("…").Grow(1).MinWidth(0)
-		if hovered {
+		ui.Row(c).Gap(2).Shrink(0).Children(func() {
 			label := locales.CmdNewTabOn(name)
-			if iconButton(c, k, "plus", label, 20, 13).Tooltip(label).Clicked() {
+			add := iconButton(c, k, "plus", label, 20, 13).Tooltip(label).Focusable()
+			more := a.hostActionsButton(c, k, h, false, 20)
+			if !visible && !add.Focused() && !more.Focused() {
+				add.Opacity(0)
+				more.Opacity(0)
+			}
+			if add.Clicked() {
 				a.newTabOn(h, a.dirOn(h))
 			}
-		}
+		})
 	})
 }

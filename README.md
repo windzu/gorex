@@ -374,6 +374,13 @@ machine pairs as (the computer's name, at first):
    sheet tries again every three seconds and saves the host once it is
    let in.
 
+The host name’s **⋯** menu in the sidebar, host panel and Settings opens
+**Edit Information…** for this machine or a remote host, including one
+that is offline. Set an optional alias and note; both belong to this
+client and survive discovery updates. Clearing the alias restores the
+default name. Editing this information leaves connections and running
+terminals in place. The editor follows the app’s language.
+
 The hosts are kept in `hosts.json` beside the settings, readable by the
 user only, and not in `settings.json`: their addresses are secrets, which
 GoRex never logs nor shows. Each host's row shows its state (Connecting,

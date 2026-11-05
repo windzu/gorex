@@ -5839,3 +5839,269 @@ func RemoteLanListenOn() string { return In(i18n.Locale()).RemoteLanListenOn() }
 func (msgs Messages) RemoteLanListenOn() string {
 	return Catalog.Format(msgs.locale, "remoteLanListenOn", nil)
 }
+
+// HostActions says "Actions for {name}"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostActions(name string) string { return In(i18n.Locale()).HostActions(name) }
+
+// HostActions says "Actions for {name}"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostActions(name string) string {
+	return Catalog.Format(msgs.locale, "hostActions", map[string]any{"name": name})
+}
+
+// HostEdit says "Edit Information…"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEdit() string { return In(i18n.Locale()).HostEdit() }
+
+// HostEdit says "Edit Information…"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEdit() string {
+	return Catalog.Format(msgs.locale, "hostEdit", nil)
+}
+
+// HostEditTitle says "Edit Host Information"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditTitle() string { return In(i18n.Locale()).HostEditTitle() }
+
+// HostEditTitle says "Edit Host Information"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditTitle() string {
+	return Catalog.Format(msgs.locale, "hostEditTitle", nil)
+}
+
+// HostEditAlias says "Alias"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditAlias() string { return In(i18n.Locale()).HostEditAlias() }
+
+// HostEditAlias says "Alias"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditAlias() string {
+	return Catalog.Format(msgs.locale, "hostEditAlias", nil)
+}
+
+// HostEditNote says "Note"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditNote() string { return In(i18n.Locale()).HostEditNote() }
+
+// HostEditNote says "Note"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditNote() string {
+	return Catalog.Format(msgs.locale, "hostEditNote", nil)
+}
+
+// HostEditClearAlias says "Clear Alias"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditClearAlias() string { return In(i18n.Locale()).HostEditClearAlias() }
+
+// HostEditClearAlias says "Clear Alias"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditClearAlias() string {
+	return Catalog.Format(msgs.locale, "hostEditClearAlias", nil)
+}
+
+// HostEditHint says "Only shown in GoRex on this device. Leave the alias empty to use the default name."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditHint() string { return In(i18n.Locale()).HostEditHint() }
+
+// HostEditHint says "Only shown in GoRex on this device. Leave the alias empty to use the default name."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditHint() string {
+	return Catalog.Format(msgs.locale, "hostEditHint", nil)
+}
+
+// HostEditDeviceName says "Device name"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditDeviceName() string { return In(i18n.Locale()).HostEditDeviceName() }
+
+// HostEditDeviceName says "Device name"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditDeviceName() string {
+	return Catalog.Format(msgs.locale, "hostEditDeviceName", nil)
+}
+
+// HostEditSourceName says "Source name"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditSourceName() string { return In(i18n.Locale()).HostEditSourceName() }
+
+// HostEditSourceName says "Source name"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditSourceName() string {
+	return Catalog.Format(msgs.locale, "hostEditSourceName", nil)
+}
+
+// HostEditUnknown says "Not available yet"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditUnknown() string { return In(i18n.Locale()).HostEditUnknown() }
+
+// HostEditUnknown says "Not available yet"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditUnknown() string {
+	return Catalog.Format(msgs.locale, "hostEditUnknown", nil)
+}
+
+// HostEditSave says "Save"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditSave() string { return In(i18n.Locale()).HostEditSave() }
+
+// HostEditSave says "Save"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditSave() string {
+	return Catalog.Format(msgs.locale, "hostEditSave", nil)
+}
+
+// HostEditAliasLong says "Use at most 64 characters for the alias."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditAliasLong() string { return In(i18n.Locale()).HostEditAliasLong() }
+
+// HostEditAliasLong says "Use at most 64 characters for the alias."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditAliasLong() string {
+	return Catalog.Format(msgs.locale, "hostEditAliasLong", nil)
+}
+
+// HostEditAliasInvalid says "The alias cannot contain line breaks or control characters."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditAliasInvalid() string { return In(i18n.Locale()).HostEditAliasInvalid() }
+
+// HostEditAliasInvalid says "The alias cannot contain line breaks or control characters."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditAliasInvalid() string {
+	return Catalog.Format(msgs.locale, "hostEditAliasInvalid", nil)
+}
+
+// HostEditNoteLong says "Use at most 500 characters for the note."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditNoteLong() string { return In(i18n.Locale()).HostEditNoteLong() }
+
+// HostEditNoteLong says "Use at most 500 characters for the note."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditNoteLong() string {
+	return Catalog.Format(msgs.locale, "hostEditNoteLong", nil)
+}
+
+// HostEditGone says "This host has been removed. Your draft is still here."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditGone() string { return In(i18n.Locale()).HostEditGone() }
+
+// HostEditGone says "This host has been removed. Your draft is still here."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditGone() string {
+	return Catalog.Format(msgs.locale, "hostEditGone", nil)
+}
+
+// HostEditSaveFailed says "Could not save the information. Please try again."
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostEditSaveFailed() string { return In(i18n.Locale()).HostEditSaveFailed() }
+
+// HostEditSaveFailed says "Could not save the information. Please try again."
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostEditSaveFailed() string {
+	return Catalog.Format(msgs.locale, "hostEditSaveFailed", nil)
+}
+
+// HostSourceManual says "Added manually"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostSourceManual() string { return In(i18n.Locale()).HostSourceManual() }
+
+// HostSourceManual says "Added manually"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostSourceManual() string {
+	return Catalog.Format(msgs.locale, "hostSourceManual", nil)
+}
+
+// HostSourceNetwork says "Coordinator network"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostSourceNetwork() string { return In(i18n.Locale()).HostSourceNetwork() }
+
+// HostSourceNetwork says "Coordinator network"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostSourceNetwork() string {
+	return Catalog.Format(msgs.locale, "hostSourceNetwork", nil)
+}
+
+// HostSourceTailnet says "System Tailscale"
+// in the language the app shows.
+//
+// Local host information editor and actions.
+func HostSourceTailnet() string { return In(i18n.Locale()).HostSourceTailnet() }
+
+// HostSourceTailnet says "System Tailscale"
+// in the language of msgs.
+//
+// Local host information editor and actions.
+func (msgs Messages) HostSourceTailnet() string {
+	return Catalog.Format(msgs.locale, "hostSourceTailnet", nil)
+}

@@ -30,6 +30,7 @@ var hostsUI struct {
 	fingerprint           string             // this machine's, while the host is asked to approve it
 	cancel                context.CancelFunc // stops the attempt under way
 	removing              string             // the id of the host Remove asks about
+	removeError           bool
 	layoutOpen            bool
 	layoutHost            *hostConn
 	layout                savedStore
@@ -256,7 +257,11 @@ func (a *App) hostsSettings(c *ui.Context, k *colors) {
 	settingsGroup(c, k, "", "", "", func() {
 		groupRow(c, k, nil).Children(func() {
 			_, _, glyph := a.hostIdentity()
-			tileLine(c, k, glyph, thisMachine(), nil, func() {
+			tileLine(c, k, glyph, a.hostName(nil), func() {
+				if note := prefs.HostProfiles["local"].Note; note != "" {
+					ui.Text(c, note).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…").Tooltip(note)
+				}
+			}, func() {
 				if a.localRexPairURL() != "" {
 					if ui.Button(c.Key("local-rex-qr"), locales.HostsRexQR()).Clicked() {
 						a.openLocalPairQR()
@@ -265,6 +270,7 @@ func (a *App) hostsSettings(c *ui.Context, k *colors) {
 					a.showSection("remote")
 					remoteUI.focusLAN = true
 				}
+				a.hostActionsButton(c, k, nil, true, 26)
 			})
 		})
 	})
@@ -297,11 +303,13 @@ func (a *App) hostRow(c *ui.Context, k *colors, h *hostConn) {
 	page := &hostsUI
 	label, detail, up := hostStatus(h)
 	sessions := a.sessionsOn(h)
+	w, _ := c.Size()
+	compact := w < 760
 	groupRow(c, k, h.ID).Gap(8).Children(func() {
 		ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
 			glyphIcon(c, "server", 18, k.textMuted).Shrink(0)
 			ui.Column(c).Grow(1).MinWidth(0).Gap(2).Children(func() {
-				ui.Text(c, h.Name).FontSize(13).FontWeight(600).TextColor(k.text).SingleLine().Ellipsis("…")
+				ui.Text(c, a.hostName(h)).FontSize(13).FontWeight(600).TextColor(k.text).SingleLine().Ellipsis("…").Tooltip(a.hostName(h))
 				ui.Row(c).Gap(6).AlignItems(ui.Center).Children(func() {
 					ui.Box(c).Size(7, 7).Radius(4).Background(hostDot(k, h)).Shrink(0)
 					ui.Text(c, label).FontSize(11.5).FontWeight(500).TextColor(k.textMuted)
@@ -309,9 +317,18 @@ func (a *App) hostRow(c *ui.Context, k *colors, h *hostConn) {
 						ui.Text(c, h.hello.Host.Model).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…").MinWidth(0)
 					}
 				})
+				profile := prefs.HostProfiles[h.ID]
+				if profile.Alias != "" && profile.Alias != h.Name {
+					ui.Text(c, h.Name).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…").Tooltip(h.Name)
+				}
+				if profile.Note != "" {
+					ui.Text(c, profile.Note).FontSize(11.5).TextColor(k.textFaint).SingleLine().Ellipsis("…").Tooltip(profile.Note)
+				}
 			})
-			ui.Text(c, locales.HostsSessions(sessions)).FontSize(11.5).TextColor(k.textFaint).Shrink(0)
-			if up && ui.Button(c.Key("layout"), locales.HostsLayout()).Clicked() {
+			if !compact {
+				ui.Text(c, locales.HostsSessions(sessions)).FontSize(11.5).TextColor(k.textFaint).Shrink(0)
+			}
+			if up && !compact && ui.Button(c.Key("layout"), locales.HostsLayout()).Clicked() {
 				a.openHostLayout(h)
 			}
 			tailnet := rex.IsTailnetTarget(h.Address)
@@ -328,19 +345,27 @@ func (a *App) hostRow(c *ui.Context, k *colors, h *hostConn) {
 			// A host of the network comes back with its next
 			// directory; removing it here would only make it return.
 			if !h.Network && !tailnet && ui.Button(c.Key("remove"), locales.HostsRemove()).Disabled(page.removing == h.ID).Clicked() {
-				page.removing = h.ID
+				page.removing, page.removeError = h.ID, false
 			}
+			a.hostActionsButton(c, k, h, true, 26)
 		})
 		rowHint(c, k, detail)
 		if page.removing != h.ID {
 			return
 		}
 		ui.Column(c).Gap(8).Padding(8, 10).Radius(10).Background(k.hover).Children(func() {
-			ui.Text(c, locales.HostsRemoveAsk(h.Name)).FontSize(12).TextColor(k.text).LineHeight(1.4)
+			ui.Text(c, locales.HostsRemoveAsk(a.hostName(h))).FontSize(12).TextColor(k.text).LineHeight(1.4)
+			if page.removeError {
+				ui.Text(c, locales.HostEditSaveFailed()).FontSize(12).TextColor(k.danger)
+			}
 			ui.Row(c).Gap(8).Children(func() {
 				if ui.Button(c.Key("remove-yes"), locales.HostsRemove()).Clicked() {
-					page.removing = ""
-					a.removeHost(h)
+					if a.setHostProfile(h.ID, hostProfile{}) {
+						page.removing = ""
+						a.removeHost(h)
+					} else {
+						page.removeError = true
+					}
 				}
 				if ui.Button(c.Key("remove-no"), locales.RemoteCancel()).Clicked() {
 					page.removing = ""
@@ -404,7 +429,7 @@ func (a *App) hostLayoutSheet(c *ui.Context, k *colors) {
 		ui.Row(c).Gap(10).AlignItems(ui.Center).Children(func() {
 			ui.Text(c, locales.HostsLayoutTitle()).FontSize(15).FontWeight(700).TextColor(k.text)
 			if page.layoutHost != nil {
-				ui.Text(c, page.layoutHost.Name).FontSize(12.5).TextColor(k.textFaint)
+				ui.Text(c, a.hostName(page.layoutHost)).FontSize(12.5).TextColor(k.textFaint)
 			}
 			ui.Spacer(c)
 			if page.layoutHost != nil && ui.Button(c, locales.HostsLayoutNewTab()).Clicked() {

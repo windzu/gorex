@@ -457,6 +457,7 @@ type App struct {
 	paletteQuery  string
 	paletteSel    int
 	hostOpen      bool
+	hostEdit      *hostEditor
 	renaming      *Tab
 	renameText    string
 	renameFocus   bool
